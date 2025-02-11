@@ -27,7 +27,7 @@ services:
     depends_on:
       - backend
     volumes:
-      - ./frontend/src:/usr/share/nginx/html:ro
+      - ./frontend/dist:/usr/share/nginx/html:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - 8080:80
