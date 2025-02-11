@@ -6,8 +6,10 @@ RUN npm install -g nodemon
 RUN npm install -g prisma
 
 COPY package*.json ./
-RUN npm install
 
 COPY . .
+
+RUN yarn install
+RUN yarn run db:generate
 
 CMD ["yarn", "run", "dev"]

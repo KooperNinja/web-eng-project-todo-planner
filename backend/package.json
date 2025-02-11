@@ -3,10 +3,10 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon -L src/server.js",
-    "db:generate": "npx prisma generate",
-    "db:push": "npx prisma db push",
-    "db:migrate": "npx prisma migrate dev",
-    "db:deploy": "npx prisma migrate deploy && npx prisma generate"
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy && npx prisma generate"
   },
   "dependencies": {
     "express": "^4.18.2",
