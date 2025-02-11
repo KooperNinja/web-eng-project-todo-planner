@@ -3,6 +3,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon -L src/server.js",
+    "attach": "docker compose exec -it backend bash",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
