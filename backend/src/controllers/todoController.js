@@ -62,14 +62,31 @@ export const updateTodo = async (req, res) => {
         console.error(error)
         return res.status(404).json({ 
             error: `ToDo update with id = ${id} did not work`,
-            id: id,
+            id: Number(id),
             params: req.body
         })
     }
 }
 
-export const deleteTodo = (req, res) => {
+/**
+ * 
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
+export const deleteTodo = async (req, res) => {
     const { id } = req.params
-    todos = todos.filter(t => t.id != id)
-    res.json({ message: "To-Do deleted" })
+    try {
+       const deleteTodo = await req.context.prisma.todo.delete({
+            where: {
+                id: Number(id)
+            }
+       }) 
+       res.json(deleteTodo)
+    } catch (error) {
+        console.error(error)
+        return res.status(404).json({
+            error: `ToDo with id = ${id} could not be deleted`,
+            id: Number(id)
+        })
+    }
 }
