@@ -1,0 +1,20 @@
+meta {
+  name: Create A Todo
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3001/api/todos/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Test Todo",
+    "description": "",
+    "startAt": 102183762613512,
+    "duration": 10
+  }
+}
