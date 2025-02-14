@@ -36,17 +36,36 @@ export const createTodo = async (req, res) => {
     }    
 }
 
-export const updateTodo = (req, res) => {
+/**
+ * 
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
+export const updateTodo = async (req, res) => {
     const { id } = req.params
-    const { text, done } = req.body
+    const { title, descritpion, startAt, duration } = req.body
 
-    const todo = todos.find(t => t.id == id)
-    if (!todo) return res.status(404).json({ error: "To-Do not found" })
-
-    if (text) todo.text = text
-    if (done !== undefined) todo.done = done
-
-    res.json(todo)
+    try {
+        const todo = await req.context.prisma.todo.update({
+            where: {
+                id: Number(id)
+            },
+            data: {
+                title: title || undefined,
+                descritpion: descritpion || undefined,
+                startAt: new Date(startAt) || undefined,
+                duration: duration || undefined
+            }
+        })
+        res.json(todo)
+    } catch (error) {
+        console.error(error)
+        return res.status(404).json({ 
+            error: `ToDo update with id = ${id} did not work`,
+            id: id,
+            params: req.body
+        })
+    }
 }
 
 export const deleteTodo = (req, res) => {
