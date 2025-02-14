@@ -1,20 +1,39 @@
-let todos = [
-    { id: 1, text: "Einkaufen", done: false },
-    { id: 2, text: "Hausaufgaben", done: true }
-]
 
-export const getTodos = (req, res) => {
-    res.json(todos)
+/**
+ * 
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
+export const getTodos = async (req, res) => {
+    const todos = await req.context.prisma.todo.findMany()
+    return res.json(todos)
 }
 
-export const createTodo = (req, res) => {
-    const { text } = req.body
-    if (!text) {
-        return res.status(400).json({ error: "Text is required" })
-    }
-    const newTodo = { id: todos.length + 1, text, done: false }
-    todos.push(newTodo)
-    res.status(201).json(newTodo)
+/**
+ * 
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
+export const createTodo = async (req, res) => {
+    const { title, descritpion, startAt, duration} = req.body
+    try {
+        const newTodo = await req.context.prisma.todo.create({
+            data: {
+                ownerId: 1, //needs to be the users id later
+                title: title,
+                descritpion: descritpion ?? "",
+                startAt: new Date(startAt ?? Date.now()), //if startAt is not given, make it start now
+                duration: duration ?? 30
+            }
+        })
+        res.json(newTodo)
+    } catch (error) {
+        console.log(error)
+        return res.status(404).json({
+            error: "Could not create Todo with given paramteters",
+            params: req.body
+        })
+    }    
 }
 
 export const updateTodo = (req, res) => {

@@ -28,6 +28,9 @@ All services should start accordingly. \
 #### 3.1 Backend
 Now install the packages in the `backend/` folder with the packagemanager of your liking. I recommend [Deno](https://deno.com) but that's up to you. 
 
+##### 3.1.1 API Testing
+Inside `backend/bruno-api-test` you can find the api tests for the backend. Simply open the folder as collection with Bruno and change/add your own tests.
+
 #### 3.2 Frontend
 Install the packages in the `frontend/` folder. For development use the local development script `dev` with e.g. `deno task dev` and your Vite Testserver will start. \
 Once ready for production run the `build` script. This will bundle the files and makes it avaliable for the nginx Webserver service.
