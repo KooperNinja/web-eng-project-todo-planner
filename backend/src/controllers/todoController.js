@@ -61,7 +61,7 @@ export const updateTodo = async (req, res) => {
     } catch (error) {
         console.error(error)
         return res.status(404).json({ 
-            error: `ToDo update with id = ${id} did not work`,
+            error: `Todo update with id = ${id} did not work`,
             id: Number(id),
             params: req.body
         })
@@ -85,7 +85,7 @@ export const deleteTodo = async (req, res) => {
     } catch (error) {
         console.error(error)
         return res.status(404).json({
-            error: `ToDo with id = ${id} could not be deleted`,
+            error: `Todo with id = ${id} could not be deleted`,
             id: Number(id)
         })
     }

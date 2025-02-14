@@ -3,7 +3,7 @@ import { getTodos, createTodo, updateTodo, deleteTodo } from '../controllers/tod
 
 const router = express.Router()
 
-// Endpunkte mit den Controller-Funktionen verbinden
+//Connect Controller functions to the according routes
 router.get('/', getTodos)
 router.post('/', createTodo)
 router.put('/:id', updateTodo)
