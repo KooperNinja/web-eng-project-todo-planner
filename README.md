@@ -38,6 +38,6 @@ Once ready for production run the `build` script. This will bundle the files and
 ### 4. You're all set for development
 
 - `backend/` - Express Server on Port 3001 with prisma to interact with the postgres db.
-- `frontend/`- Vanilla JS served on Port 8080 by nginx.
+- `frontend/`- Vanilla JS served on Port 8080 by nginx (production build) or on Port 5173 by Vite (dev build).
 
 
