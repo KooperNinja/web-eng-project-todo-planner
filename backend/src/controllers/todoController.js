@@ -15,14 +15,14 @@ export const getTodos = async (req, res) => {
  * @param {import('express').Response} res 
  */
 export const createTodo = async (req, res) => {
-    const { title, descritpion, startAt, duration} = req.body
+    const { title, descritpion, startAtMs, duration} = req.body
     try {
         const newTodo = await req.context.prisma.todo.create({
             data: {
                 ownerId: 1, //needs to be the users id later
                 title: title,
                 descritpion: descritpion ?? "",
-                startAt: new Date(startAt ?? Date.now()), //if startAt is not given, make it start now
+                startAt: new Date(startAtMs ?? Date.now()), //if startAt is not given, make it start now
                 duration: duration ?? 30
             }
         })
@@ -43,7 +43,7 @@ export const createTodo = async (req, res) => {
  */
 export const updateTodo = async (req, res) => {
     const { id } = req.params
-    const { title, descritpion, startAt, duration } = req.body
+    const { title, descritpion, startAtMs, duration } = req.body
 
     try {
         const todo = await req.context.prisma.todo.update({
@@ -53,7 +53,7 @@ export const updateTodo = async (req, res) => {
             data: {
                 title: title || undefined,
                 descritpion: descritpion || undefined,
-                startAt: new Date(startAt) || undefined,
+                startAt: new Date(startAtMs) || undefined,
                 duration: duration || undefined
             }
         })
