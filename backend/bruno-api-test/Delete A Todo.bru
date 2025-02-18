@@ -4,21 +4,12 @@ meta {
   seq: 5
 }
 
-put {
+delete {
   url: http://localhost:3001/api/todos/:id
   body: json
   auth: none
 }
 
 params:path {
-  id: 7
-}
-
-body:json {
-  {
-    "title": "Test Todo wowowwo",
-    "description": "",
-    "startAt": 1821547628133,
-    "duration": 10
-  }
+  id: 5
 }
