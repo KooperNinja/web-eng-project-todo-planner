@@ -1,0 +1,46 @@
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}
+
+script:pre-request {
+  const axios = require('axios');
+  
+  // Define login credentials
+  const loginPayload = {
+    email: "test@offical.com",
+    password: "testPassword"
+  };
+  
+  // Check if the token is already stored and valid
+  const existingToken = bru.getVar("jwt_token");
+  if (existingToken) {
+    console.log("Using existing JWT token.");
+  } 
+  else {
+    console.log("Fetching new JWT token...");
+  
+    // Send login request
+    const response = await axios.post("http://localhost:3001/api/auth/login", loginPayload, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }
+  );
+    
+     // Parse response JSON
+    const data = response.data;
+    console.log(response)
+    // Store token globally if login is successful
+    if (data.token) {
+      bru.setVar("jwt_token", data.token);
+      console.log("JWT token stored successfully.");
+    } else console.log("did not work")
+    
+  }
+  
+  
+}

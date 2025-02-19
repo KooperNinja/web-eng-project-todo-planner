@@ -7,11 +7,15 @@ meta {
 put {
   url: http://localhost:3001/api/todos/:id
   body: json
-  auth: none
+  auth: bearer
 }
 
 params:path {
   id: 7
+}
+
+auth:bearer {
+  token: {{jwt_token}}
 }
 
 body:json {

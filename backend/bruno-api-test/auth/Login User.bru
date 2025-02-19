@@ -1,0 +1,22 @@
+meta {
+  name: Login User
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3001/api/auth/login
+  body: json
+  auth: none
+}
+
+headers {
+  : 
+}
+
+body:json {
+  {
+    "email": "test@eeee",
+    "password": "superstronkpw"
+  }
+}
