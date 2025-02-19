@@ -10,6 +10,6 @@ COPY package*.json ./
 COPY . .
 
 RUN yarn install
-RUN yarn run db:deploy
+RUN yarn run db:generate
 
 CMD ["yarn", "run", "dev"]
