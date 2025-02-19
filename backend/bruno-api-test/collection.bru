@@ -7,6 +7,8 @@ auth:bearer {
 }
 
 script:pre-request {
+  if(req.url.includes('register')) return;
+  
   const axios = require('axios');
   
   // Define login credentials
@@ -17,7 +19,8 @@ script:pre-request {
   
   // Check if the token is already stored and valid
   const existingToken = bru.getVar("jwt_token");
-  if (existingToken) {
+  const validUntil = bru.getVar("jwt_token_expire");
+  if (existingToken && validUntil && validUntil > Date.now()) {
     console.log("Using existing JWT token.");
   } 
   else {
@@ -37,6 +40,7 @@ script:pre-request {
     // Store token globally if login is successful
     if (data.token) {
       bru.setVar("jwt_token", data.token);
+      bru.setVar("jwt_token_expire", Date.now() + 45*60*100)
       console.log("JWT token stored successfully.");
     } else console.log("did not work")
     
