@@ -1,6 +1,7 @@
 import express from 'express'
 import { addContextToRequest } from './middleware/context.js'
-import todoRoutes from './routes/todos.js'
+import todoRouter from './routes/todoRouter.js'
+import authRouter from './routes/authRouter.js'
 
 const app = express()
 
@@ -12,7 +13,8 @@ app.use(express.json())
 app.get('/', (req, res) => {
     res.send("You found us.")
 })
-app.use('/api/todos', todoRoutes)
+app.use('/api/todos', todoRouter)
+app.use('/api/auth', authRouter)
 
 // Start the Backend App
 app.listen(3001, '0.0.0.0', () => {
