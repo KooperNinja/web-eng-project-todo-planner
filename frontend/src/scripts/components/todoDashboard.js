@@ -31,7 +31,7 @@ export class TodoDashboard extends LitElement {
             border: 1px solid #ccc;
             text-align: center;
             position: relative;
-            height: 60px; /* Höhe einer Stunde */
+            height: 60px; 
         }
 
         th {
@@ -42,29 +42,43 @@ export class TodoDashboard extends LitElement {
         }
 
         .time-column {
-            width: 80px;
-            background: #e0e0e0;
-            font-weight: bold;
+            vertical-align: top;
+            text-align: right;
+            padding-top: 0;
+            outline: none;
+            border: none; 
+            position: relative;
+            width: 50px; 
+        }
+        
+        .time-column p {
+            position: relative;
+            top: -45%;
+        }
+        
+        .calendar-table td.time-column {
+            border: none; 
+        }
+
+        .calendar-table th.time-column {
+            border: none; 
+        }
+
+        .calendar-table td, .calendar-table th {
+            border-left: 1px solid #ccc; 
+        }
+
+        .calendar-table td.time-column, .calendar-table th.time-column {
+            border-left: none;
         }
 
         .task {
             position: absolute;
-            left: 5px;
-            right: 5px;
-            background: #4A90E2;
-            color: white;
-            padding: 5px;
-            font-size: 12px;
-            border-radius: 5px;
-            text-align: center;
-            overflow: hidden;
-        }
-
-        .calendar-table .half-hour {
-            height: 30px;
-        }
-        .calendar-table .half-hour td {
-            border-top: 1px solid #ccc;
+            left: 0;
+            right: 0;
+            background: rgba(74, 144, 226, 0.3); 
+            border: 1px solid #4A90E2;
+            box-sizing: border-box;
         }
     `;
 
@@ -77,16 +91,16 @@ export class TodoDashboard extends LitElement {
         super();
         this.userId = 1;
         this.tasks = [
-            { id: 1, ownerId: 1, title: "Projekt starten", startAt: "2025-02-19T09:00:00Z", duration: 120 },
-            { id: 2, ownerId: 1, title: "Meeting mit Team", startAt: "2025-02-20T14:00:00Z", duration: 90 },
-            { id: 3, ownerId: 1, title: "Entwicklung", startAt: "2025-02-21T10:30:00Z", duration: 180 },
-            { id: 4, ownerId: 1, title: "Dokumentation", startAt: "2025-02-23T11:15:00Z", duration: 60 }
+            { id: 1, ownerId: 1, title: "Projekt starten", startAt: "2025-02-17T09:00:00Z", duration: 120 },
+            { id: 2, ownerId: 1, title: "Meeting mit Team", startAt: "2025-02-18T14:00:00Z", duration: 90 },
+            { id: 3, ownerId: 1, title: "Entwicklung", startAt: "2025-02-19T10:30:00Z", duration: 180 },
+            { id: 4, ownerId: 1, title: "Dokumentation", startAt: "2025-02-21T11:15:00Z", duration: 60 }
         ];
     }
 
     getWeekDays() {
         const today = new Date();
-        const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 1));
+        const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 1)); // Montag als erster Tag der Woche
         return Array.from({ length: 7 }, (_, i) => {
             const day = new Date(firstDayOfWeek);
             day.setDate(firstDayOfWeek.getDate() + i);
@@ -132,7 +146,9 @@ export class TodoDashboard extends LitElement {
                 <tbody>
                     ${timeSlots.map(slot => html`
                         <tr>
-                            <td class="time-column">${slot.label}</td>
+                            <td class="time-column">
+                                <p>${slot.label}</p>
+                            </td>
                             ${weekDays.map(day => {
                                 const tasksForCell = userTasks.filter(task => {
                                     const taskStart = new Date(task.startAt);
@@ -151,17 +167,6 @@ export class TodoDashboard extends LitElement {
                 </tbody>
             </table>
         `;
-
-        // CSS Anpassungen, um die Uhrzeit am Anfang der Stunde anzuzeigen
-        const style = document.createElement('style');
-        style.textContent = `
-            .calendar-table .time-column {
-                vertical-align: top;
-                text-align: right;
-                padding-top: 0;
-            }
-        `;
-        document.head.appendChild(style);
     }
 }
 
