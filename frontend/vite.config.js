@@ -4,13 +4,22 @@ import { defineConfig } from 'vite'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+/**
+ * 
+ * @param {string} page 
+ * @returns 
+ */
+const resolveInput = (page) => resolve(__dirname, 'src', page)
+
 export default defineConfig({
+  root: 'src',
+  publicDir: '../public',
   build: {
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        dashboard: resolve(__dirname, 'dashboard/index.html'),
+        main: resolveInput('index.html'),
+        dashboard: resolveInput('dashboard/index.html'),
       },
     },
-  },
+  }
 })
