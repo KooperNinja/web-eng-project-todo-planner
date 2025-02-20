@@ -4,8 +4,6 @@ import { isSameDate } from './dateUtils.js';
 class DateDisplay extends LitElement {
   static properties = {
     date: {
-      // Für Wrapper-Typen wie Date, einfacher Vergleich funktioniert nicht,
-      // weil jedes Date-Objekt ein neues ist
       hasChanged: (value, oldValue) => {
         return !isSameDate(value, oldValue);
       },
