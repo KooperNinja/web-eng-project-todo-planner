@@ -34,9 +34,9 @@ class HeaderComponent extends LitElement {
         <div>To-Do Planner</div>
         <nav>
           <a href="/">Home</a>
-          <a href="/xxx">XXX</a>
-          <a href="/contact">Contact</a>
-          <a href="/login">Login</a>
+          <a href="/dashboard/index.html">Dashboard</a>
+          <a href="/register/index.html">Contact</a>
+          <a href="/login/index.html">Login</a>
         </nav>
       </header>
     `;
