@@ -9,11 +9,15 @@
 ### 1. `.env` File
 
 Copy the `.env.example` and rename it to `.env`. This file should be ignored by git by default. \
-Change the password variable to your liking you may leave the rest. \
+Change the password variable to your liking\
 ```
 POSTGRES_PASSWORD=yoursecurepassword
 ```
-**Only change something if you know what you are doing!**
+Same goes for your JWT_SECRET. You should generate this with a [Generator](https://jwtsecret.com/generate).
+```
+JWT_SECRET=youe_secret_that_you_should_generate
+```
+**Only change something else if you know what you are doing!**
 
 ### 2. Initial starting of the dev containers
 
