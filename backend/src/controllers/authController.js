@@ -29,7 +29,10 @@ export const registerUser = async (req, res) => {
         return res.json({ token: token })
     } catch (error) {
         console.error(error)
-        return res.status(400).json({ error: "User could not be created, User probably already exists" })
+        return res.status(400).json({ 
+            errorCode: 1,
+            error: "User could not be created, User probably already exists",
+        })
     }
 }
 
