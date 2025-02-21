@@ -6,4 +6,14 @@ const backendAxios = axios.create({
     responseType: 'json',
 })
 
-export { backendAxios }
+/**
+ * 
+ * @param {string} token 
+ */
+const applyToken = (token) => {
+    token = token.replace('Bearer ', '');
+    localStorage.setItem('token', token);
+    backendAxios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
+
+export { backendAxios, applyToken }
