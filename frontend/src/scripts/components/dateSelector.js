@@ -44,11 +44,11 @@ class DateSelector extends LitElement {
 
   render() {
     return html`
-      <p>Choose a date:
+      <p>Wähle ein Datum:
         <input type="date" @change=${this._dateChanged}>
       </p>
-      <p><button @click=${this._chooseToday}>Choose Today</button></p>
-      <p>Date chosen: <date-display .date=${this.date}></date-display></p>
+      <p><button @click=${this._chooseToday}>Wähle heute</button></p>
+      <p>Datum: <date-display .date=${this.date}></date-display></p>
     `;
   }
 
