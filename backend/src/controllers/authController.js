@@ -48,12 +48,18 @@ export const loginUser = async (req, res) => {
     const user = await req.context.prisma.user.findUnique({ where: { email } });
 
     if (!user) {
-        return res.status(401).json({ error: `User is not found with that email: ${email}` })
+        return res.status(401).json({ 
+            errorCode: 1,
+            error: `User is not found with that email: ${email}` }
+        )
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password)
     if (!passwordMatch) {
-        return res.status(401).json({ error: `Wrong password` })
+        return res.status(401).json({ 
+            errorCode: 2,
+            error: `Wrong password` 
+        })
     }
 
     const token = signUserToken(user.id)
