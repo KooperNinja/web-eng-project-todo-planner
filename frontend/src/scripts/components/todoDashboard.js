@@ -21,6 +21,18 @@ export class TodoDashboard extends LitElement {
             font-size: 24px;
         }
 
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .calendar-container {
+            position: relative;
+            flex: 1;
+            overflow-y: auto;
+        }
+
         .calendar-table {
             width: 100%;
             border-collapse: collapse;
@@ -31,7 +43,7 @@ export class TodoDashboard extends LitElement {
             border: 1px solid #ccc;
             text-align: center;
             position: relative;
-            height: 60px; 
+            height: 57px; /* Höhe einer Stunde */
         }
 
         th {
@@ -39,52 +51,72 @@ export class TodoDashboard extends LitElement {
             color: white;
             font-size: 16px;
             padding: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 2;
         }
 
         .time-column {
             vertical-align: top;
             text-align: right;
             padding-top: 0;
-            outline: none;
-            border: none; 
-            position: relative;
-            width: 50px; 
+            border: none; /* Entfernt die Linien der ersten Spalte */
+            position: sticky;
+            left: 0;
+            background: #4A90E2;
+            color: white;
+            width: 50px; /* Feste Breite für die erste Spalte */
+            z-index: 2;
         }
-        
+
         .time-column p {
             position: relative;
             top: -45%;
         }
-        
+
         .calendar-table td.time-column {
-            border: none; 
+            border: none; /* Entfernt die Linien der ersten Spalte */
         }
 
         .calendar-table th.time-column {
-            border: none; 
+            border: none; /* Entfernt die Linien der ersten Spalte */
         }
 
         .calendar-table td, .calendar-table th {
-            border-left: 1px solid #ccc; 
+            border-left: 1px solid #ccc; /* Fügt eine linke Rahmenlinie zu allen Zellen hinzu */
         }
 
         .calendar-table td.time-column, .calendar-table th.time-column {
-            border-left: none;
+            border-left: none; /* Entfernt die linke Rahmenlinie der ersten Spalte */
         }
 
         .task {
             position: absolute;
             left: 0;
             right: 0;
-            background: rgba(74, 144, 226, 0.3); 
+            background: rgba(74, 144, 226, 0.3); /* Hintergrundfarbe für Meetings */
             border: 1px solid #4A90E2;
             box-sizing: border-box;
+        }
+
+        .today {
+            background: #1E528A; /* Hintergrundfarbe für das heutige Datum */
+        }
+
+        .current-time-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: red;
+            z-index: 1;
         }
     `;
 
     static properties = {
         tasks: { type: Array },
-        userId: { type: Number }
+        userId: { type: Number },
+        currentWeekStart: { type: Date }
     };
 
     constructor() {
@@ -96,11 +128,17 @@ export class TodoDashboard extends LitElement {
             { id: 3, ownerId: 1, title: "Entwicklung", startAt: "2025-02-19T10:30:00Z", duration: 180 },
             { id: 4, ownerId: 1, title: "Dokumentation", startAt: "2025-02-21T11:15:00Z", duration: 60 }
         ];
+        this.currentWeekStart = this.getStartOfWeek(new Date());
+    }
+
+    getStartOfWeek(date) {
+        const day = date.getDay();
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+        return new Date(date.setDate(diff));
     }
 
     getWeekDays() {
-        const today = new Date();
-        const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 1)); // Montag als erster Tag der Woche
+        const firstDayOfWeek = new Date(this.currentWeekStart);
         return Array.from({ length: 7 }, (_, i) => {
             const day = new Date(firstDayOfWeek);
             day.setDate(firstDayOfWeek.getDate() + i);
@@ -109,16 +147,16 @@ export class TodoDashboard extends LitElement {
     }
 
     getTimeSlots() {
-        return Array.from({ length: 24 }, (_, i) => ({
+        return [{ label: '', hour: -1 }, ...Array.from({ length: 24 }, (_, i) => ({
             label: `${0 + i}:00`,
             hour: 0 + i
-        }));
+        }))];
     }
 
     renderTask(task) {
         const taskStart = new Date(task.startAt);
         const startMinutes = taskStart.getMinutes();
-        const durationHeight = (task.duration / 60) * 60; // Höhe in px
+        const durationHeight = (task.duration / 57) * 57; // Höhe in px, angepasst an die Höhe der Stundenzeilen
 
         return html`
             <div class="task"
@@ -129,6 +167,36 @@ export class TodoDashboard extends LitElement {
         `;
     }
 
+    previousWeek() {
+        this.currentWeekStart.setDate(this.currentWeekStart.getDate() - 7);
+        this.requestUpdate();
+    }
+
+    nextWeek() {
+        this.currentWeekStart.setDate(this.currentWeekStart.getDate() + 7);
+        this.requestUpdate();
+    }
+
+    getCurrentTimeLinePosition() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        return (hours * 57) + (minutes / 57) * 57; // Position in px
+    }
+
+    updateCurrentTimeLine() {
+        const currentTimeLine = this.shadowRoot.querySelector('.current-time-line');
+        if (currentTimeLine) {
+            currentTimeLine.style.top = `${this.getCurrentTimeLinePosition()}px`;
+        }
+    }
+
+    firstUpdated() {
+        this.shadowRoot.querySelector('.calendar-container').scrollTop = 8 * 57; // Scroll to 7 AM
+        this.updateCurrentTimeLine();
+        setInterval(() => this.updateCurrentTimeLine(), 60000); // Update every minute
+    }
+
     render() {
         const weekDays = this.getWeekDays();
         const timeSlots = this.getTimeSlots();
@@ -136,36 +204,46 @@ export class TodoDashboard extends LitElement {
 
         return html`
             <h2>Mein Wochenplan</h2>
-            <table class="calendar-table">
-                <thead>
-                    <tr>
-                        <th class="time-column"></th>
-                        ${weekDays.map(day => html`<th>${day.label}</th>`)}
-                    </tr>
-                </thead>
-                <tbody>
-                    ${timeSlots.map(slot => html`
+            <div class="controls">
+                <button @click="${this.previousWeek}">Vorherige Woche</button>
+                <button @click="${this.nextWeek}">Nächste Woche</button>
+            </div>
+            <div class="calendar-container">
+                <div class="current-time-line" style="top: ${this.getCurrentTimeLinePosition()}px;"></div>
+                <table class="calendar-table">
+                    <thead>
                         <tr>
-                            <td class="time-column">
-                                <p>${slot.label}</p>
-                            </td>
+                            <th class="time-column"></th>
                             ${weekDays.map(day => {
-                                const tasksForCell = userTasks.filter(task => {
-                                    const taskStart = new Date(task.startAt);
-                                    return taskStart.toDateString() === day.date.toDateString() &&
-                                           taskStart.getHours() === slot.hour;
-                                });
-
-                                return html`
-                                    <td>
-                                        ${tasksForCell.map(this.renderTask)}
-                                    </td>
-                                `;
+                                const isToday = new Date().toDateString() === day.date.toDateString();
+                                return html`<th class="${isToday ? 'today' : ''}">${day.label}</th>`;
                             })}
                         </tr>
-                    `)}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        ${timeSlots.map(slot => html`
+                            <tr>
+                                <td class="time-column">
+                                    <p>${slot.label}</p>
+                                </td>
+                                ${weekDays.map(day => {
+                                    const tasksForCell = userTasks.filter(task => {
+                                        const taskStart = new Date(task.startAt);
+                                        return taskStart.toDateString() === day.date.toDateString() &&
+                                               taskStart.getHours() === slot.hour;
+                                    });
+
+                                    return html`
+                                        <td>
+                                            ${tasksForCell.map(this.renderTask)}
+                                        </td>
+                                    `;
+                                })}
+                            </tr>
+                        `)}
+                    </tbody>
+                </table>
+            </div>
         `;
     }
 }
