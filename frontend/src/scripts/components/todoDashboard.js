@@ -27,6 +27,12 @@ export class TodoDashboard extends LitElement {
             padding: 10px;
         }
 
+        .calendar-container {
+            position: relative;
+            flex: 1;
+            overflow-y: auto;
+        }
+
         .calendar-table {
             width: 100%;
             border-collapse: collapse;
@@ -37,7 +43,7 @@ export class TodoDashboard extends LitElement {
             border: 1px solid #ccc;
             text-align: center;
             position: relative;
-            height: 60px; /* Höhe einer Stunde */
+            height: 57px; /* Höhe einer Stunde */
         }
 
         th {
@@ -45,6 +51,9 @@ export class TodoDashboard extends LitElement {
             color: white;
             font-size: 16px;
             padding: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 2;
         }
 
         .time-column {
@@ -52,8 +61,12 @@ export class TodoDashboard extends LitElement {
             text-align: right;
             padding-top: 0;
             border: none; /* Entfernt die Linien der ersten Spalte */
-            position: relative;
+            position: sticky;
+            left: 0;
+            background: #4A90E2;
+            color: white;
             width: 50px; /* Feste Breite für die erste Spalte */
+            z-index: 2;
         }
 
         .time-column p {
@@ -88,6 +101,15 @@ export class TodoDashboard extends LitElement {
 
         .today {
             background: #1E528A; /* Hintergrundfarbe für das heutige Datum */
+        }
+
+        .current-time-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: red;
+            z-index: 1;
         }
     `;
 
@@ -125,16 +147,16 @@ export class TodoDashboard extends LitElement {
     }
 
     getTimeSlots() {
-        return Array.from({ length: 24 }, (_, i) => ({
+        return [{ label: '', hour: -1 }, ...Array.from({ length: 24 }, (_, i) => ({
             label: `${0 + i}:00`,
             hour: 0 + i
-        }));
+        }))];
     }
 
     renderTask(task) {
         const taskStart = new Date(task.startAt);
         const startMinutes = taskStart.getMinutes();
-        const durationHeight = (task.duration / 60) * 60; // Höhe in px, angepasst an die Höhe der Stundenzeilen
+        const durationHeight = (task.duration / 57) * 57; // Höhe in px, angepasst an die Höhe der Stundenzeilen
 
         return html`
             <div class="task"
@@ -155,6 +177,26 @@ export class TodoDashboard extends LitElement {
         this.requestUpdate();
     }
 
+    getCurrentTimeLinePosition() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        return (hours * 57) + (minutes / 57) * 57; // Position in px
+    }
+
+    updateCurrentTimeLine() {
+        const currentTimeLine = this.shadowRoot.querySelector('.current-time-line');
+        if (currentTimeLine) {
+            currentTimeLine.style.top = `${this.getCurrentTimeLinePosition()}px`;
+        }
+    }
+
+    firstUpdated() {
+        this.shadowRoot.querySelector('.calendar-container').scrollTop = 8 * 57; // Scroll to 7 AM
+        this.updateCurrentTimeLine();
+        setInterval(() => this.updateCurrentTimeLine(), 60000); // Update every minute
+    }
+
     render() {
         const weekDays = this.getWeekDays();
         const timeSlots = this.getTimeSlots();
@@ -166,39 +208,42 @@ export class TodoDashboard extends LitElement {
                 <button @click="${this.previousWeek}">Vorherige Woche</button>
                 <button @click="${this.nextWeek}">Nächste Woche</button>
             </div>
-            <table class="calendar-table">
-                <thead>
-                    <tr>
-                        <th class="time-column"></th>
-                        ${weekDays.map(day => {
-                            const isToday = new Date().toDateString() === day.date.toDateString();
-                            return html`<th class="${isToday ? 'today' : ''}">${day.label}</th>`;
-                        })}
-                    </tr>
-                </thead>
-                <tbody>
-                    ${timeSlots.map(slot => html`
+            <div class="calendar-container">
+                <div class="current-time-line" style="top: ${this.getCurrentTimeLinePosition()}px;"></div>
+                <table class="calendar-table">
+                    <thead>
                         <tr>
-                            <td class="time-column">
-                                <p>${slot.label}</p>
-                            </td>
+                            <th class="time-column"></th>
                             ${weekDays.map(day => {
-                                const tasksForCell = userTasks.filter(task => {
-                                    const taskStart = new Date(task.startAt);
-                                    return taskStart.toDateString() === day.date.toDateString() &&
-                                           taskStart.getHours() === slot.hour;
-                                });
-
-                                return html`
-                                    <td>
-                                        ${tasksForCell.map(this.renderTask)}
-                                    </td>
-                                `;
+                                const isToday = new Date().toDateString() === day.date.toDateString();
+                                return html`<th class="${isToday ? 'today' : ''}">${day.label}</th>`;
                             })}
                         </tr>
-                    `)}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        ${timeSlots.map(slot => html`
+                            <tr>
+                                <td class="time-column">
+                                    <p>${slot.label}</p>
+                                </td>
+                                ${weekDays.map(day => {
+                                    const tasksForCell = userTasks.filter(task => {
+                                        const taskStart = new Date(task.startAt);
+                                        return taskStart.toDateString() === day.date.toDateString() &&
+                                               taskStart.getHours() === slot.hour;
+                                    });
+
+                                    return html`
+                                        <td>
+                                            ${tasksForCell.map(this.renderTask)}
+                                        </td>
+                                    `;
+                                })}
+                            </tr>
+                        `)}
+                    </tbody>
+                </table>
+            </div>
         `;
     }
 }
