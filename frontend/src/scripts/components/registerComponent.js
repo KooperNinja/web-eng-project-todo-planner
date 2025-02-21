@@ -1,5 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { navigate } from '../router.js';
+import { AxiosError } from 'axios';
+import { applyToken, backendAxios } from '../axios.js';
+
 
 class RegisterPage extends LitElement {
   static styles = css`
@@ -92,20 +95,36 @@ class RegisterPage extends LitElement {
     this[name] = value;
   }
 
-  handleRegister(event) {
+  async handleRegister(event) {
     event.preventDefault();
 
     if (this.username === '' || this.email === '' || this.password === '' || this.passwordValidation === '') {
       this.error = 'Alle Felder sind verpflichtend auszufüllen.';
+      return
     }
-    else if (this.password !== this.passwordValidation) {
+    if (this.password !== this.passwordValidation) {
       this.passwordValidation = '';
       this.error = 'Die Passwörter stimmen nicht überein!';
+      return
     }
-    else {
-      this.error = '';
-      navigate('/');
+    this.error = '';
+    
+    try {
+      const response = await backendAxios.post('/auth/register', {
+        name: this.username,
+        email: this.email,
+        password: this.password,
+      });
+      applyToken(response.data.token);
+    } catch (error) {
+      if (!(error instanceof AxiosError)) return;
+      this.error = 'Fehler bei Registrierung';
+      if (error.response?.data.errorCode === 1) {
+        this.error = 'Ein Benutzer existiert bereits unter dieser E-Mail-Adresse.';
+        return;
+      }
     }
+    navigate('/');
   }
 
 

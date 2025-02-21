@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { navigate } from '../router.js';
-import { backendAxios } from '../axios.js';
+import { applyToken, backendAxios } from '../axios.js';
 
 class LoginPage extends LitElement {
   static styles = css`
@@ -118,8 +118,7 @@ class LoginPage extends LitElement {
         email: this.email,
         password: this.password,
       })
-      const token = response.data.token.replace('Bearer ', '');
-      localStorage.setItem('token', token);
+      applyToken(response.data.token);
     } catch (/** @type {AxiosError} */error) {
       this.error = 'Fehler beim Login. '
       switch (error.response.data.errorCode) {
