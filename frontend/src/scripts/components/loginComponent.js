@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { navigate } from '../router.js';
+import { backendAxios } from '../axios.js';
 
 class LoginPage extends LitElement {
   static styles = css`
@@ -103,15 +104,35 @@ class LoginPage extends LitElement {
     this[name] = value;
   }
 
-  handleLogin(event) {
+  async handleLogin(event) {
     event.preventDefault();
 
     if (this.email === '' || this.password === '') {
       this.error = 'Beide Felder sind verpflichtend auszufüllen.';
-    } else {
-      this.error = '';
-      navigate('/');
+      return
     }
+    this.error = '';
+
+    try {
+      const response = await backendAxios.post('/auth/login', {
+        email: this.email,
+        password: this.password,
+      })
+      const token = response.data.token.replace('Bearer ', '');
+      localStorage.setItem('token', token);
+    } catch (/** @type {AxiosError} */error) {
+      this.error = 'Fehler beim Login. '
+      switch (error.response.data.errorCode) {
+        case 1:
+          this.error += 'Benutzer mit dieser E-Mail-Adresse nicht gefunden.';
+          break;
+        case 2:
+          this.error += 'Falsches Passwort.';
+          break;
+      }
+      return
+    }
+    navigate('/');
   }
 
   render() {
