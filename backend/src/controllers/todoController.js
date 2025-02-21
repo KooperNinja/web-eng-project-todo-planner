@@ -5,7 +5,11 @@
  * @param {import('express').Response} res 
  */
 export const getTodos = async (req, res) => {
-    const todos = await req.context.prisma.todo.findMany()
+    const todos = await req.context.prisma.todo.findMany({
+        where: {
+            ownerId: req.context.user.id
+        }
+    })
     return res.json(todos)
 }
 
@@ -19,7 +23,7 @@ export const createTodo = async (req, res) => {
     try {
         const newTodo = await req.context.prisma.todo.create({
             data: {
-                ownerId: 1, //needs to be the users id later
+                ownerId: req.context.user.id,
                 title: title,
                 descritpion: descritpion ?? "",
                 startAt: new Date(startAtMs ?? Date.now()), //if startAt is not given, make it start now
@@ -48,7 +52,8 @@ export const updateTodo = async (req, res) => {
     try {
         const todo = await req.context.prisma.todo.update({
             where: {
-                id: Number(id)
+                id: Number(id),
+                ownerId: req.context.user.id
             },
             data: {
                 title: title || undefined,
@@ -78,7 +83,8 @@ export const deleteTodo = async (req, res) => {
     try {
        const deleteTodo = await req.context.prisma.todo.delete({
             where: {
-                id: Number(id)
+                id: Number(id),
+                ownerId: req.context.user.id
             }
        }) 
        res.json(deleteTodo)
