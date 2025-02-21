@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import { addContextToRequest } from './middleware/context.js'
 import todoRouter from './routes/todoRouter.js'
 import authRouter from './routes/authRouter.js'
@@ -8,6 +9,7 @@ const app = express()
 // Middleware
 app.use(addContextToRequest)
 app.use(express.json())
+app.use(cors());
 
 // Routes
 app.get('/', (req, res) => {
