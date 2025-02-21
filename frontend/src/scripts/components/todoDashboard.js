@@ -43,7 +43,7 @@ export class TodoDashboard extends LitElement {
             border: 1px solid #ccc;
             text-align: center;
             position: relative;
-            height: 57px; /* Höhe einer Stunde */
+            height: 57px;
         }
 
         th {
@@ -60,12 +60,12 @@ export class TodoDashboard extends LitElement {
             vertical-align: top;
             text-align: right;
             padding-top: 0;
-            border: none; /* Entfernt die Linien der ersten Spalte */
+            border: none; 
             position: sticky;
             left: 0;
             background: #4A90E2;
             color: white;
-            width: 50px; /* Feste Breite für die erste Spalte */
+            width: 50px; 
             z-index: 2;
         }
 
@@ -75,32 +75,32 @@ export class TodoDashboard extends LitElement {
         }
 
         .calendar-table td.time-column {
-            border: none; /* Entfernt die Linien der ersten Spalte */
+            border: none; 
         }
 
         .calendar-table th.time-column {
-            border: none; /* Entfernt die Linien der ersten Spalte */
+            border: none; 
         }
 
         .calendar-table td, .calendar-table th {
-            border-left: 1px solid #ccc; /* Fügt eine linke Rahmenlinie zu allen Zellen hinzu */
+            border-left: 1px solid #ccc; 
         }
 
         .calendar-table td.time-column, .calendar-table th.time-column {
-            border-left: none; /* Entfernt die linke Rahmenlinie der ersten Spalte */
+            border-left: none; 
         }
 
         .task {
             position: absolute;
             left: 0;
             right: 0;
-            background: rgba(74, 144, 226, 0.3); /* Hintergrundfarbe für Meetings */
+            background: rgba(74, 144, 226, 0.3); 
             border: 1px solid #4A90E2;
             box-sizing: border-box;
         }
 
         .today {
-            background: #1E528A; /* Hintergrundfarbe für das heutige Datum */
+            background: #1E528A; 
         }
 
         .current-time-line {
