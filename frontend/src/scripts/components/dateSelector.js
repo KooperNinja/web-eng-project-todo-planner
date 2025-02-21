@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { localDateFromUTC } from './dateUtils.js';
+import { localDateFromUTC } from '../utils/dateUtils.js';
 import './dateDisplay.js';
 
 class DateSelector extends LitElement {

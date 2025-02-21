@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { isSameDate } from './dateUtils.js';
+import { isSameDate } from '../utils/dateUtils.js';
 
 class DateDisplay extends LitElement {
   static properties = {
