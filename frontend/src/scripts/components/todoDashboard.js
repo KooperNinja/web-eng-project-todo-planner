@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import './todoPopup.js';
 
 export class TodoDashboard extends LitElement {
     static styles = css`
@@ -111,16 +112,23 @@ export class TodoDashboard extends LitElement {
             background: red;
             z-index: 1;
         }
+
+        .popup-container {
+            position: relative;
+        }
     `;
 
     static properties = {
+        showPopup: { type: Boolean },
         tasks: { type: Array },
         userId: { type: Number },
-        currentWeekStart: { type: Date }
+        currentWeekStart: { type: Date },
+        currentTime: { type: String }
     };
 
     constructor() {
         super();
+        this.showPopup = false;
         this.userId = 1;
         this.tasks = [
             { id: 1, ownerId: 1, title: "Projekt starten", startAt: "2025-02-17T09:00:00Z", duration: 120 },
@@ -129,11 +137,16 @@ export class TodoDashboard extends LitElement {
             { id: 4, ownerId: 1, title: "Dokumentation", startAt: "2025-02-21T11:15:00Z", duration: 60 }
         ];
         this.currentWeekStart = this.getStartOfWeek(new Date());
+        this.currentTime = this.getCurrentTime();
+    }
+
+    togglePopup() {
+        this.showPopup = !this.showPopup;
     }
 
     getStartOfWeek(date) {
         const day = date.getDay();
-        const diff = date.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1);
         return new Date(date.setDate(diff));
     }
 
@@ -148,15 +161,15 @@ export class TodoDashboard extends LitElement {
 
     getTimeSlots() {
         return [{ label: '', hour: -1 }, ...Array.from({ length: 24 }, (_, i) => ({
-            label: `${0 + i}:00`,
-            hour: 0 + i
+            label: `${(i) % 24}:00`, 
+            hour: (i + 1) % 24
         }))];
     }
 
     renderTask(task) {
         const taskStart = new Date(task.startAt);
         const startMinutes = taskStart.getMinutes();
-        const durationHeight = (task.duration / 57) * 57; // Höhe in px, angepasst an die Höhe der Stundenzeilen
+        const durationHeight = (task.duration / 57) * 57; 
 
         return html`
             <div class="task"
@@ -179,9 +192,9 @@ export class TodoDashboard extends LitElement {
 
     getCurrentTimeLinePosition() {
         const now = new Date();
-        const hours = now.getHours();
+        const hours = (now.getHours() + 3) % 24; 
         const minutes = now.getMinutes();
-        return (hours * 57) + (minutes / 57) * 57; // Position in px
+        return (hours * 57.9) + (minutes / 60) * 57;
     }
 
     updateCurrentTimeLine() {
@@ -191,10 +204,18 @@ export class TodoDashboard extends LitElement {
         }
     }
 
+    getCurrentTime() {
+        const now = new Date();
+        return now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    }
+
     firstUpdated() {
-        this.shadowRoot.querySelector('.calendar-container').scrollTop = 8 * 57; // Scroll to 7 AM
+        this.shadowRoot.querySelector('.calendar-container').scrollTop = 8 * 57;
         this.updateCurrentTimeLine();
-        setInterval(() => this.updateCurrentTimeLine(), 60000); // Update every minute
+        setInterval(() => {
+            this.updateCurrentTimeLine();
+            this.currentTime = this.getCurrentTime();
+        }, 1000); 
     }
 
     render() {
@@ -206,8 +227,15 @@ export class TodoDashboard extends LitElement {
             <h2>Mein Wochenplan</h2>
             <div class="controls">
                 <button @click="${this.previousWeek}">Vorherige Woche</button>
+                <button @click="${this.togglePopup}">+ Neues To-Do</button>
                 <button @click="${this.nextWeek}">Nächste Woche</button>
+                
             </div>
+            
+            <div class="popup-container">
+                ${this.showPopup ? html`<todo-popup @close="${this.togglePopup}"></todo-popup>` : ''}
+            </div>
+
             <div class="calendar-container">
                 <div class="current-time-line" style="top: ${this.getCurrentTimeLinePosition()}px;"></div>
                 <table class="calendar-table">
