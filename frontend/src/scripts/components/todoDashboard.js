@@ -116,6 +116,18 @@ export class TodoDashboard extends LitElement {
         .popup-container {
             position: relative;
         }
+
+        .time-dialog {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            z-index: 1000;
+        }
     `;
 
     static properties = {
@@ -161,8 +173,8 @@ export class TodoDashboard extends LitElement {
 
     getTimeSlots() {
         return [{ label: '', hour: -1 }, ...Array.from({ length: 24 }, (_, i) => ({
-            label: `${(i) % 24}:00`, 
-            hour: (i + 1) % 24
+            label: `${i % 24}:00`, 
+            hour: (i + 3) % 24
         }))];
     }
 
@@ -194,7 +206,7 @@ export class TodoDashboard extends LitElement {
         const now = new Date();
         const hours = (now.getHours() + 3) % 24; 
         const minutes = now.getMinutes();
-        return (hours * 57.9) + (minutes / 60) * 57;
+        return (hours * 57) + (minutes / 57) * 57;
     }
 
     updateCurrentTimeLine() {
