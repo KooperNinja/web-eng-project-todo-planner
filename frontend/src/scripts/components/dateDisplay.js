@@ -4,58 +4,30 @@ import { isSameDate } from '../utils/dateUtils.js';
 class DateDisplay extends LitElement {
   static properties = {
     date: {
-      hasChanged: (value, oldValue) => {
-        return !isSameDate(value, oldValue);
-      },
+      hasChanged: (value, oldValue) => !isSameDate(value, oldValue),
     },
   };
 
   static styles = css`
-    #datefield {
-      font-family: Arial, sans-serif;
-      font-size: 1.5em;
-      color: #333;
-      padding: 10px;
-      border-radius: 5px;
-      background-color: #f0f0f0;
+    :host {
       display: inline-block;
-    }
-    #datefield.animate {
-      animation: colorChange 1s ease-in-out;
+      font-family: Arial, sans-serif;
+      color: #333;
     }
 
-    @keyframes colorChange {
-      0% {
-        background-color: #fff;
-      }
-      50% {
-        background-color: #324fff;
-      }
-      100% {
-        background-color: #fff;
-      }
+    .datefield {
+      font-size: 0.8em; 
+      font-weight: bold;
+      color: #000;
+      padding: 3px 7px; 
+      display: inline-block;
     }
   `;
 
-  get datefield() {
-    return this.renderRoot?.querySelector('#datefield') ?? null;
-  }
-
-  frames = [
-    { backgroundColor: '#fff' },
-    { backgroundColor: '#324fff' },
-    { backgroundColor: '#fff' },
-  ];
-
   render() {
-    return html`<span id="datefield">${this.date?.toLocaleDateString()}</span>`;
-  }
-
-  updated(changed) {
-    if (changed.has('date')) {
-      this.datefield?.classList.add('animate');
-      this.datefield?.animate(this.frames, 1000);
-    }
+    return html`
+      <div class="datefield">${this.date ? this.date.toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}</div>
+    `;
   }
 }
 
