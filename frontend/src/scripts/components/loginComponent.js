@@ -5,12 +5,14 @@ import { applyToken, backendAxios } from '../axios.js';
 class LoginPage extends LitElement {
   static styles = css`
     :host {
+      --primary-color: #0d4c8b;
+
       display: block;
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      background-color: #f4f4f9;
+      background-color: var(--primary-color);
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -20,7 +22,7 @@ class LoginPage extends LitElement {
     .login-container {
       background-color: white;
       padding: 20px;
-      border-radius: 16px;
+      border-radius: 50px;
       width: 60%;
       height: 95.5%;
     }
