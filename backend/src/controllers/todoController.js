@@ -26,7 +26,7 @@ export const createTodo = async (req, res) => {
                 ownerId: req.context.user.id,
                 title: title,
                 descritpion: descritpion ?? "",
-                startAt: new Date(startAtMs ?? Date.now()), //if startAt is not given, make it start now
+                startAt: new Date(startAtMs ?? Date.now()), //if startAtMs is not given, make it start now
                 duration: duration ?? 30
             }
         })
