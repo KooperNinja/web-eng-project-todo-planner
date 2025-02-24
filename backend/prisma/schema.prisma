@@ -14,7 +14,7 @@ model Todo {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     title String 
-    descritpion String
+    description String @default("")
     startAt DateTime 
     duration Int 
 }
