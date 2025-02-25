@@ -132,7 +132,7 @@ class LandingComponent extends LitElement {
                         </div>
                     </div>
                     <div class="hero-image-container">
-                        <img src="images/calender.png" alt="hero-image" class="hero-image">
+                        <img src="/calender.png" alt="hero-image" class="hero-image">
                     </div>
                 </div>
 
