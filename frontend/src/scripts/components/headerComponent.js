@@ -163,7 +163,7 @@ class HeaderComponent extends LitElement {
         
         <div class="header-content">
           <div class="title-container">
-            <img src="../images/calender-logo.png" alt="logo" width="50" height="50">
+            <img src="/calender-logo.png" alt="logo" width="50" height="50">
             <title>To-Do Planner</title>
           </div>
           <nav>
