@@ -16,4 +16,14 @@ const applyToken = (token) => {
 	backendAxios.defaults.headers.common['Authorization'] = `Bearer ${token}`
 }
 
-export { backendAxios, applyToken }
+backendAxios.interceptors.request.use((config) => {
+	const token = localStorage.getItem('token')
+	if (token) {
+		config.headers['Authorization'] = `Bearer ${token}`
+	}
+	return config
+})
+
+const getBackendAxios = () => backendAxios
+
+export { getBackendAxios, applyToken, backendAxios }
