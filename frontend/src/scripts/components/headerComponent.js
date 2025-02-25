@@ -95,20 +95,6 @@ class HeaderComponent extends LitElement {
 				z-index: 1000;
 			}
 
-			/* gute Idee, aber nicht notwendig, weiß nicht woran es liegt
-        --> sorgt dafür, dass der Hintergrund bei offenem Menü nicht verschwommen ist
-        nav.show-mobile-menu header::before {
-          position: fixed;
-          content: "";
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.2);
-          backdrop-filter: blur(5px);
-        }
-        */
-
 			nav.show-mobile-menu {
 				left: 0;
 				display: flex;
