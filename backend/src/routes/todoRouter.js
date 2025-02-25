@@ -9,6 +9,7 @@ router.use(authenticate)
 //Connect Controller functions to the according routes
 router.get('/', getTodos)
 router.post('/', createTodo)
+router.post('/new', createTodo)
 router.put('/:id', updateTodo)
 router.delete('/:id', deleteTodo)
 

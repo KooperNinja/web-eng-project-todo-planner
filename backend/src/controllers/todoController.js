@@ -22,6 +22,7 @@ export const getTodos = async (req, res) => {
 export const createTodo = async (req, res) => {
     const { title, description, startAtMs, duration } = req.body
     try {
+        const endAtMs = startAtMs + duration * 60000
         const newTodo = await req.context.prisma.todo.create({
             data: {
                 ownerId: req.context.user.id,
@@ -29,12 +30,13 @@ export const createTodo = async (req, res) => {
                 description: description ?? "",
                 startAt: new Date(startAtMs ?? Date.now()), //if startAtMs is not given, make it start now
                 duration: duration ?? 30,
-                endAt: new Date(startAtMs + duration * 60000)
+                endAt: new Date(endAtMs)
             }
         })
         res.json(newTodo)
     } catch (error) {
         console.log(error)
+        console.log(req.body)
         return res.status(404).json({
             error: "Could not create Todo with given parameters",
             params: req.body
