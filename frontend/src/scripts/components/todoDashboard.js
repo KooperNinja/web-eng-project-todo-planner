@@ -105,7 +105,7 @@ export class TodoDashboard extends LitElement {
         }
 
         .current-time-line {
-            position: absolute;
+            position: relative;
             left: 0;
             right: 0;
             height: 2px;
@@ -127,6 +127,13 @@ export class TodoDashboard extends LitElement {
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 4px;
             z-index: 1000;
+        }
+
+        .josh-fix-div{
+            height: 100vh;
+            position: relative;
+            margin: 0;
+            overflow: hidden;
         }
     `;
 
@@ -172,9 +179,9 @@ export class TodoDashboard extends LitElement {
     }
 
     getTimeSlots() {
-        return [{ label: '', hour: -1 }, ...Array.from({ length: 24 }, (_, i) => ({
-            label: `${i % 24}:00`, 
-            hour: (i + 3) % 24
+        return [{ label: '', hour: -1 }, ...Array.from({ length: 23 }, (_, i) => ({
+            label: `${(i+1) % 24}:00`, 
+            hour: (i + 4) % 24
         }))];
     }
 
@@ -204,17 +211,29 @@ export class TodoDashboard extends LitElement {
 
     getCurrentTimeLinePosition() {
         const now = new Date();
-        const hours = (now.getHours() + 3) % 24; 
-        const minutes = now.getMinutes();
-        return (hours * 57) + (minutes / 57) * 57;
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+
+        // Berechnung des Prozentsatzes der Zeitposition
+        const totalMinutes = hours * 60 + minutes;
+        const totalDayMinutes = 24 * 60;
+        return (totalMinutes / totalDayMinutes) * 110.6;
     }
+    
+    
+    
 
     updateCurrentTimeLine() {
         const currentTimeLine = this.shadowRoot.querySelector('.current-time-line');
-        if (currentTimeLine) {
-            currentTimeLine.style.top = `${this.getCurrentTimeLinePosition()}px`;
+        const calendarContainer = this.shadowRoot.querySelector('.calendar-container');
+    
+        if (currentTimeLine && calendarContainer) {
+            const positionPercentage = this.getCurrentTimeLinePosition();
+            currentTimeLine.style.top = `${positionPercentage}vh`;
         }
     }
+    
+    
 
     getCurrentTime() {
         const now = new Date();
@@ -249,7 +268,6 @@ export class TodoDashboard extends LitElement {
             </div>
 
             <div class="calendar-container">
-                <div class="current-time-line" style="top: ${this.getCurrentTimeLinePosition()}px;"></div>
                 <table class="calendar-table">
                     <thead>
                         <tr>
@@ -260,29 +278,37 @@ export class TodoDashboard extends LitElement {
                             })}
                         </tr>
                     </thead>
-                    <tbody>
-                        ${timeSlots.map(slot => html`
-                            <tr>
-                                <td class="time-column">
-                                    <p>${slot.label}</p>
-                                </td>
-                                ${weekDays.map(day => {
-                                    const tasksForCell = userTasks.filter(task => {
-                                        const taskStart = new Date(task.startAt);
-                                        return taskStart.toDateString() === day.date.toDateString() &&
-                                               taskStart.getHours() === slot.hour;
-                                    });
-
-                                    return html`
-                                        <td>
-                                            ${tasksForCell.map(this.renderTask)}
-                                        </td>
-                                    `;
-                                })}
-                            </tr>
-                        `)}
-                    </tbody>
                 </table>
+                <div class=".josh-fix-div">
+                    <!--<div class="current-time-line" style="top: ${this.getCurrentTimeLinePosition()}px;"></div>-->
+                    <div class="current-time-line" style="height: 2px; background: red; "></div>
+
+                    <table class="calendar-table">
+                        <tbody>
+                            
+                                ${timeSlots.map(slot => html`
+                                    <tr>
+                                        <td class="time-column">
+                                            <p>${slot.label}</p>
+                                        </td>
+                                        ${weekDays.map(day => {
+                                            const tasksForCell = userTasks.filter(task => {
+                                                const taskStart = new Date(task.startAt);
+                                                return taskStart.toDateString() === day.date.toDateString() &&
+                                                    taskStart.getHours() === slot.hour;
+                                            });
+
+                                            return html`
+                                                <td>
+                                                    ${tasksForCell.map(this.renderTask)}
+                                                </td>
+                                            `;
+                                        })}
+                                    </tr>
+                                `)}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         `;
     }
