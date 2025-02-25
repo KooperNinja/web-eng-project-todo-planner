@@ -11,6 +11,7 @@ export class TodoDashboard extends LitElement {
             flex-direction: column;
             background: #f5f5f5;
             overflow: auto;
+            position: static;
         }
 
         h2 {
@@ -30,11 +31,16 @@ export class TodoDashboard extends LitElement {
 
         .calendar-container {
             position: relative;
+            height: 100%;
+            width: 100%;
             flex: 1;
             overflow-y: auto;
         }
 
         .calendar-table {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
@@ -104,17 +110,22 @@ export class TodoDashboard extends LitElement {
             background: #1E528A; 
         }
 
+        .time-line-container {
+            position: absolute;
+            top: 78px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
         .current-time-line {
             position: absolute;
-            left: 0;
-            right: 0;
+            width: 100%;
             height: 2px;
-            background: red;
-            z-index: 1;
+            background-color: #ff0000
         }
 
         .popup-container {
-            position: relative;
+            position: static;
         }
 
         .time-dialog {
@@ -172,10 +183,10 @@ export class TodoDashboard extends LitElement {
     }
 
     getTimeSlots() {
-        return [{ label: '', hour: -1 }, ...Array.from({ length: 24 }, (_, i) => ({
+        return Array.from({ length: 24 }, (_, i) => ({
             label: `${i % 24}:00`, 
-            hour: (i + 3) % 24
-        }))];
+            hour: (i) % 24
+        }));
     }
 
     renderTask(task) {
@@ -204,17 +215,22 @@ export class TodoDashboard extends LitElement {
 
     getCurrentTimeLinePosition() {
         const now = new Date();
-        const hours = (now.getHours() + 3) % 24; 
+        const hours = now.getHours();
         const minutes = now.getMinutes();
-        return (hours * 57) + (minutes / 57) * 57;
+        const hourPercentage = (hours / 24) * 100;
+        const minutePercentage = (minutes / (24 * 60)) * 100;
+        return css `top: 100%;`
+        return css `top: ${hourPercentage + minutePercentage}%;`
     }
+    
 
     updateCurrentTimeLine() {
         const currentTimeLine = this.shadowRoot.querySelector('.current-time-line');
         if (currentTimeLine) {
-            currentTimeLine.style.top = `${this.getCurrentTimeLinePosition()}px`;
+            currentTimeLine.style.top = `${this.getCurrentTimeLinePosition()}%`;
         }
     }
+    
 
     getCurrentTime() {
         const now = new Date();
@@ -249,8 +265,10 @@ export class TodoDashboard extends LitElement {
             </div>
 
             <div class="calendar-container">
-                <div class="current-time-line" style="top: ${this.getCurrentTimeLinePosition()}px;"></div>
                 <table class="calendar-table">
+                    <div class="time-line-container">
+                        <div class="current-time-line" .style=${this.getCurrentTimeLinePosition()}></div>
+                    </div>
                     <thead>
                         <tr>
                             <th class="time-column"></th>
@@ -260,7 +278,7 @@ export class TodoDashboard extends LitElement {
                             })}
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="calendar-body">
                         ${timeSlots.map(slot => html`
                             <tr>
                                 <td class="time-column">

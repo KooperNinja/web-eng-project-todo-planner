@@ -7,7 +7,7 @@ class TimeDisplay extends LitElement {
 
   render() {
     return html`
-      <span>${this.time ? this.time : ''}</span> <!-- Display the time as a string -->
+      <span>${this.time ? this.time : ''}</span>
     `;
   }
 }
