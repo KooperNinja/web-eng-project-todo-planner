@@ -21,6 +21,9 @@ export default defineConfig({
       input: {
         main: resolveInput('index.html'),
         dashboard: resolveInput('dashboard/index.html'),
+        contact: resolveInput('contact/index.html'),
+        login: resolveInput('login/index.html'),
+        register: resolveInput('register/index.html'),
       },
     },
   }
