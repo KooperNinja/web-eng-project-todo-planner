@@ -4,19 +4,27 @@ import { applyToken, backendAxios } from '../axios.js';
 
 class LoginPage extends LitElement {
   static styles = css`
+    /* Import Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Miniver&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+      
     :host {
       --primary-color: #0d4c8b;
+      --secondary-color: #fa7d00;
 
-      display: block;
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       background-color: var(--primary-color);
-      height: 100vh;
+      flex-grow: 1;
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
+    }
+
+    * {
+        font-family: 'Poppins', sans-serif;
     }
 
     .login-container {
@@ -24,12 +32,24 @@ class LoginPage extends LitElement {
       padding: 20px;
       border-radius: 50px;
       width: 60%;
-      height: 95.5%;
+      flex-grow: 1;
     }
 
-    .login-container h2 {
-      text-align: center;
-      margin-bottom: 20px;
+    h2 {
+        text-align: center;
+        padding: 60px 0 30px;
+        text-transform: uppercase;
+        font-size: 36px;
+    }
+
+    h2::after {
+        content: '';
+        width: 80px;
+        height: 5px;
+        display: block;
+        margin: 10px auto 0;
+        border-radius: 5px;
+        background-color: var(--secondary-color);
     }
 
     .input-container{

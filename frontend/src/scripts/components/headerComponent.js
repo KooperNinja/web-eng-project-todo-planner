@@ -98,17 +98,17 @@ class HeaderComponent extends LitElement {
 
       /* gute Idee, aber nicht notwendig, weiß nicht woran es liegt
         --> sorgt dafür, dass der Hintergrund bei offenem Menü nicht verschwommen ist
-      nav.show-mobile-menu header::before {
-        position: fixed;
-        content: "";
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(5px);
-      }
-      */
+        nav.show-mobile-menu header::before {
+          position: fixed;
+          content: "";
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.2);
+          backdrop-filter: blur(5px);
+        }
+        */
 
 
       nav.show-mobile-menu {
@@ -172,7 +172,7 @@ class HeaderComponent extends LitElement {
             </button>
             <a href="/">Home</a>
             <a href="/dashboard/index.html">Dashboard</a>
-            <a href="/register/index.html">Contact</a>            
+            <a href="/contact/index.html">Kontakt</a>            
             <a href="/login/index.html">Login</a>
           </nav>
           <button id="menu-open-button" class="logo-button">

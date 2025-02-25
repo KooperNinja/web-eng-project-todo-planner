@@ -6,8 +6,13 @@ import { applyToken, backendAxios } from '../axios.js';
 
 class RegisterPage extends LitElement {
   static styles = css`
+    /* Import Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Miniver&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+      
     :host {
       --primary-color: #0d4c8b;
+      --secondary-color: #fa7d00;
+
 
       display: block;
       font-family: Arial, sans-serif;
@@ -21,6 +26,10 @@ class RegisterPage extends LitElement {
       align-items: center;
     }
 
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
+
     .register-container {
       background-color: white;
       padding: 20px;
@@ -29,9 +38,21 @@ class RegisterPage extends LitElement {
       height: 95.5%;
     }
 
-    .register-container h2 {
-      text-align: center;
-      margin-bottom: 20px;
+    h2 {
+        text-align: center;
+        padding: 60px 0 30px;
+        text-transform: uppercase;
+        font-size: 36px;
+    }
+
+    h2::after {
+        content: '';
+        width: 80px;
+        height: 5px;
+        display: block;
+        margin: 10px auto 0;
+        border-radius: 5px;
+        background-color: var(--secondary-color);
     }
 
     .input-container{
