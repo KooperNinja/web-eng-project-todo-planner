@@ -129,7 +129,7 @@ export class TodoDashboard extends LitElement {
             z-index: 1000;
         }
 
-        .josh-fix-div{
+        .calendar-wrapper{
             height: 100vh;
             position: relative;
             margin: 0;
@@ -282,7 +282,7 @@ export class TodoDashboard extends LitElement {
                         </tr>
                     </thead>
                 </table>
-                <div class=".josh-fix-div">
+                <div class=".calendar-wrapper">
                     <!--<div class="current-time-line" style="top: ${this.getCurrentTimeLinePosition()}px;"></div>-->
                     <div class="current-time-line" style="height: 2px; background: red; "></div>
 
