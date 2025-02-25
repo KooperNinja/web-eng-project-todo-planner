@@ -12,6 +12,7 @@ export class TodoPopup extends LitElement {
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
+            font-family: 'Poppins', sans-serif;
 			background: #fff;
 			border: 1px solid #ddd;
 			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
