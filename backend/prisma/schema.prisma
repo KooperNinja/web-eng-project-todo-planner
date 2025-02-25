@@ -17,6 +17,7 @@ model Todo {
     description String @default("")
     startAt DateTime 
     duration Int 
+    endAt DateTime
 }
 
 model User {
