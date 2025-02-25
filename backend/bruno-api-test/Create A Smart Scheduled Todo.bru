@@ -1,0 +1,23 @@
+meta {
+  name: Create A Smart Scheduled Todo
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:3001/api/todos/smart
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}
+
+body:json {
+  {
+    "title": "Test Todo with things",
+    "description": "",
+    "duration": 10
+  }
+}

@@ -1,3 +1,4 @@
+import { time } from 'console'
 
 /**
  * 
@@ -19,7 +20,7 @@ export const getTodos = async (req, res) => {
  * @param {import('express').Response} res 
  */
 export const createTodo = async (req, res) => {
-    const { title, description, startAtMs, duration} = req.body
+    const { title, description, startAtMs, duration } = req.body
     try {
         const newTodo = await req.context.prisma.todo.create({
             data: {
@@ -38,7 +39,7 @@ export const createTodo = async (req, res) => {
             error: "Could not create Todo with given parameters",
             params: req.body
         })
-    }    
+    }
 }
 
 /**
@@ -67,7 +68,7 @@ export const updateTodo = async (req, res) => {
         res.json(todo)
     } catch (error) {
         console.error(error)
-        return res.status(404).json({ 
+        return res.status(404).json({
             error: `Todo update with id = ${id} did not work`,
             id: Number(id),
             params: req.body
@@ -83,13 +84,13 @@ export const updateTodo = async (req, res) => {
 export const deleteTodo = async (req, res) => {
     const { id } = req.params
     try {
-       const deleteTodo = await req.context.prisma.todo.delete({
+        const deleteTodo = await req.context.prisma.todo.delete({
             where: {
                 id: Number(id),
                 ownerId: req.context.user.id
             }
-       }) 
-       res.json(deleteTodo)
+        })
+        res.json(deleteTodo)
     } catch (error) {
         console.error(error)
         return res.status(404).json({
@@ -105,28 +106,52 @@ export const deleteTodo = async (req, res) => {
  * @param {import('express').Response} res 
  */
 export const createTodoSmartSchedule = async (req, res) => {
-    const { title, description, duration } = req.body
-    const startAtMs = Date.now()
+    let { title, description, duration } = req.body
+    let { timeFrameEndMs, timeFrameStartMs } = req.body
+
+    if (!timeFrameEndMs || !timeFrameStartMs) {
+        const defaultTimeFrame = getDefaultTimeFrame()
+        timeFrameStartMs = defaultTimeFrame.timeFrameStartMs
+        timeFrameEndMs = defaultTimeFrame.timeFrameEndMs
+    }
+
     try {
+        duration = duration ?? 30
+        const startAt = await calculateSmartStartTime(req.context, duration, timeFrameStartMs, timeFrameEndMs)
+
         const newTodo = await req.context.prisma.todo.create({
             data: {
                 ownerId: req.context.user.id,
                 title: title,
                 description: description ?? "",
-                startAt: new Date(startAtMs),
-                duration: duration ?? 30,
-                endAt: new Date(startAtMs + duration * 60000)
+                startAt: startAt,
+                duration: duration,
+                endAt: new Date(startAt.getTime() + duration * 60000)
             }
         })
         res.json(newTodo)
     } catch (error) {
         console.log(error)
         return res.status(404).json({
-            error: "Could not create Todo with given parameters",
+            error: "Could not create smart Todo with given parameters",
             params: req.body
         })
-    }    
-} 
+    }
+}
+
+
+/**
+ * 
+ * @returns {{timeFrameStartMs: number, timeFrameEndMs: number}}
+ */
+const getDefaultTimeFrame = () => {
+    const now = new Date()
+    const timeFrameStart = new Date(now)
+    const timeFrameStartMs = timeFrameStart.setHours(16, 0, 0, 0)
+    const timeFrameEnd = new Date(now)
+    const timeFrameEndMs = timeFrameEnd.setHours(23, 59, 59, 999)
+    return { timeFrameStartMs, timeFrameEndMs }
+}
 
 /**
  * 
@@ -134,31 +159,38 @@ export const createTodoSmartSchedule = async (req, res) => {
  * @param {number} duration 
  * @param {number} timeFrameStartMs
  * @param {number} timeFrameEndMs
+ * @returns {Promise<Date>} 
  */
 const calculateSmartStartTime = async (context, duration, timeFrameStartMs, timeFrameEndMs) => {
     const todos = await context.prisma.todo.findMany({
         select: {
             startAt: true,
-            duration: true
+            duration: true,
+            endAt: true
+        },
+        orderBy: {
+            startAt: "asc"
         },
         where: {
             ownerId: context.user.id,
-            OR: [
-                {
-                    startAt: {
-                        gte: new Date(timeFrameStartMs),
-                        lte: new Date(timeFrameEndMs)
-                    }
-                },
-            ]
-            
+            startAt: {
+                lte: new Date(timeFrameEndMs)
+            },
+            endAt: {
+                gte: new Date(timeFrameStartMs)
+            }
         }
     })
     let startAt = new Date(timeFrameStartMs)
-    for(const todo of todos) {
-        const endAt = startAt.getTime() + duration * 60000
-        if(todo.startAt.getTime() < endAt) {
-            startAt = new Date(todo.startAt.getTime() + todo.duration * 60000)
+    for (let i = 0; i < todos.length; i++) {
+        const endAtMs = startAt.getTime() + duration * 60000
+        const todo = todos[i]
+        const lastTodo = todos[i - 1]
+
+        if (todo.startAt.getTime() > endAtMs && (!lastTodo || lastTodo.endAt.getTime() < startAt.getTime())) {
+            return startAt
         }
+        startAt = new Date(todo.endAt.getTime())
     }
+    return startAt
 }

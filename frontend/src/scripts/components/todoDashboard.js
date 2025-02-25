@@ -1,5 +1,5 @@
-import { LitElement, html, css } from 'lit';
-import './todoPopup.js';
+import { LitElement, html, css } from 'lit'
+import './todoPopup.js'
 
 export class TodoDashboard extends LitElement {
     static styles = css`
@@ -314,4 +314,4 @@ export class TodoDashboard extends LitElement {
     }
 }
 
-customElements.define('todo-dashboard', TodoDashboard);
+customElements.define('todo-dashboard', TodoDashboard)

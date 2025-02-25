@@ -1,19 +1,28 @@
 {
-  "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "^5.4.10",
-    "@types/node": "^16.11.11"
-  },
-  "dependencies": {
-    "lit": "^3.2.1",
-    "axios": "^1.7.9"
-  }
+	"name": "frontend",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"format": "prettier --write ."
+	},
+	"devDependencies": {
+		"vite": "^5.4.10",
+		"@types/node": "^16.11.11"
+	},
+	"dependencies": {
+		"lit": "^3.2.1",
+		"axios": "^1.7.9",
+		"prettier": "^3.5.2"
+	},
+	"prettier": {
+		"semi": false,
+		"singleQuote": true,
+		"trailingComma": "es5",
+		"useTabs": true,
+		"tabWidth": 4
+	}
 }
