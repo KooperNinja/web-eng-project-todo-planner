@@ -3,6 +3,7 @@ import './timeSelector.js'
 import './timeDisplay.js'
 import './dateSelector.js'
 import './dateDisplay.js'
+import { backendAxios } from '../axios.js'
 
 export class TodoPopup extends LitElement {
 	static styles = css`
@@ -82,7 +83,20 @@ export class TodoPopup extends LitElement {
 			font-size: 1em;
 			margin-left: 10px;
 		}
+
+		.message {
+			color: lightgreen;
+		}
 	`
+
+	static properties = {
+		message: { type: String },
+	}
+
+	constructor() {
+		super()
+		this.message = ''
+	}
 
 	closePopup() {
 		this.dispatchEvent(
@@ -97,14 +111,52 @@ export class TodoPopup extends LitElement {
 
 	getStartAtMsFromSelector() {
 		const dateSelector = this.shadowRoot.querySelector('date-selector')
-		return dateSelector ? new Date(dateSelector.date) : null
+		return dateSelector ? new Date(dateSelector.date).getTime() : null
+	}
+	/**
+	 * 
+	 * @param {string} timeString 
+	 * @returns 
+	 */
+	getMsFromTime(timeString) {
+		if (!timeString) {
+			return 0
+		}
+		const timeArray = timeString.split(':')
+		const hours = Number(timeArray[0]) || 0
+		const minutes = Number(timeArray[1]) || 0
+		return hours * 60 * 60 * 1000 + minutes * 60 * 1000
 	}
 
-	saveTodo() {
+	async saveTodo() {
 		const title = this.shadowRoot.querySelector('#title').value
-		const notes = this.shadowRoot.querySelector('#notes').value
-		const date = this.getDateFromSelector()
-		if (!date) {
+		const description = this.shadowRoot.querySelector('#notes').value
+		const startAtMs = this.getStartAtMsFromSelector()
+		if (!startAtMs || !title) {
+			return
+		}
+		const timeSelector = this.shadowRoot.querySelector('time-selector')
+		const autoPlan = timeSelector.autoPlan
+		const duration = Number(timeSelector.duration) || 0
+		const startTimeString = timeSelector.time
+		if(!autoPlan && !startTimeString) {
+			return
+		}
+		const startTimeMs = this.getMsFromTime(startTimeString)
+		try {
+			const newTodo = await backendAxios.post(`/todos${autoPlan ? '/smart' : '/new'}`, {
+				title: title,
+				description: description,
+				startAtMs: startAtMs + startTimeMs,
+				duration: duration,
+			})
+			console.log(newTodo)
+			this.message = `To-Do ${newTodo.data.title} wurde erfolgreich erstellt`
+			this.dispatchEvent(
+				new CustomEvent('newTodo', { bubbles: true, composed: true })
+			)
+		} catch (error) {
+			console.error(error)
 		}
 	}
 
@@ -136,7 +188,7 @@ export class TodoPopup extends LitElement {
 					<time-selector id="time"></time-selector>
 					<time-display></time-display>
 				</div>
-
+				${this.message ? html`<p class="message">${this.message}</p>` : ''}
 				<div class="popup-footer">
 					<button @click="${this.saveTodo}">Speichern</button>
 				</div>
