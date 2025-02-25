@@ -268,6 +268,9 @@ export class TodoDashboard extends LitElement {
             </div>
 
             <div class="calendar-container">
+                <div class="time-line-container">
+                    <div class="current-time-line" style="top: ${this.getCurrentTimeLinePosition()}%;"></div>
+                </div>
                 <table class="calendar-table">
                     <thead>
                         <tr>

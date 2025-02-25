@@ -1,29 +1,23 @@
 <!doctype html>
 <html lang="de">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>To-Do Dashboard</title>
-		<script
-			type="module"
-			src="../scripts/components/todoDashboard.js"
-		></script>
-		<script
-			type="module"
-			src="../scripts/components/headerComponent.js"
-		></script>
-		<link rel="stylesheet" href="../styles/reset.css" />
 
-		<!-- Linking Font Awsome for icons -->
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-		/>
-	</head>
-	<body>
-		<header-component></header-component>
-		<main>
-			<todo-dashboard></todo-dashboard>
-		</main>
-	</body>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do Dashboard</title>
+    <script type="module" src="../scripts/components/todoListView.js"></script>
+    <script type="module" src="../scripts/components/headerComponent.js"></script>
+    <link rel="stylesheet" href="../styles/reset.css">
+
+    <!-- Linking Font Awsome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+</head>
+
+<body>
+    <header-component></header-component>
+    <main>
+        <todo-list-view></todo-list-view>
+    </main>
+</body>
+
 </html>
