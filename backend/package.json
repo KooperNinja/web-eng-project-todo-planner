@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "start": "node src/server.js",
+    "start:dev": "yarn run db:migrate && yarn run dev",
     "dev": "nodemon -L src/server.js",
     "attach": "docker compose exec -it backend bash",
     "db:generate": "prisma generate",

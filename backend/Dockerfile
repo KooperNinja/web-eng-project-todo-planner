@@ -7,9 +7,4 @@ RUN npm install -g prisma
 
 COPY package*.json ./
 
-COPY . .
-
-RUN yarn install
-RUN yarn run db:generate
-
-CMD ["yarn", "run", "dev"]
+CMD ["yarn", "install"]
