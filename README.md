@@ -5,6 +5,11 @@ A small Todo Planner project.
 - [Docker](https://www.docker.com) (you can also use open source alternatives that can pull images and work with docker compose, e.g. [Rancher](https://rancherdesktop.io))
 - packagemanager for development ([npm](https://nodejs.org/en/download) / [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable) / [deno](https://deno.com) / [bun](https://bun.sh/docs/installation) ...)
 
+### Recommended Vs Code Extensions 
+- [Lit-plugin](https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin) for a clean component syntax highlighting.
+- [Prisma](https://marketplace.visualstudio.com/items?itemName=Prisma.prisma) for `.prisma` files
+
+
 ## Setup
 
 ### 1. `.env` File
