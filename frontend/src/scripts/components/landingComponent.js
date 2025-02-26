@@ -84,6 +84,11 @@ class LandingComponent extends LitElement {
 			align-items: right;
 		}
 
+		.hero-image {
+			height: 600px;
+			width: auto;
+		}
+
 		/*
         .hero-image-container .hero-image {
             width: 300px;
@@ -100,9 +105,13 @@ class LandingComponent extends LitElement {
 				padding: 30px 20px 20px;
 				margin-left: 0;
 			}
+			.hero-image {
+				height: auto;
+				width: 300px;
+			}
 
 			.hero-section .hero-image-container {
-				max-width: 270px;
+				max-height: 300px;
 				margin-right: 0;
 			}
 
@@ -145,7 +154,7 @@ class LandingComponent extends LitElement {
 					</div>
 					<div class="hero-image-container">
 						<img
-							src="/calender.png"
+							src="/todo-landing.svg"
 							alt="hero-image"
 							class="hero-image"
 						/>
