@@ -15,7 +15,7 @@ A small Todo Planner project.
 ### 1. `.env` File
 
 Copy the `.env.example` and rename it to `.env`. This file should be ignored by git by default. \
-Change the password variable to your liking\
+Change the password variable to your liking
 ```
 POSTGRES_PASSWORD=yoursecurepassword
 ```
@@ -27,10 +27,10 @@ JWT_SECRET=your_secret_that_you_should_generate
 
 ### 2. Initial starting of the dev containers
 At first navigate to `/frontend` and run the `build` script. \
-This will bundle the fronted in order for nginx to serve it later. \
+This will bundle the fronted in order for nginx to serve it later. 
 
 In the root of the project run `docker compose up --build`. \
-All services should start accordingly. \
+All services should start accordingly. 
 - The Node Backend will start in development mode by default and refreshes on file change. 
 - The Frontend is served by nginx. NOTE: your file changes will only be replicated once you build and restart the service again. For development purposes use the method described in [3.2](#32-frontend)
 
