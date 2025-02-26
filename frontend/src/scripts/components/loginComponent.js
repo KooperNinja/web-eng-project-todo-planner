@@ -141,6 +141,7 @@ class LoginPage extends LitElement {
 				password: this.password,
 			})
 			applyToken(response.data.token)
+			navigate('/dashboard')
 		} catch (/** @type {AxiosError} */ error) {
 			this.error = 'Fehler beim Login. '
 			switch (error.response.data.errorCode) {
@@ -154,7 +155,7 @@ class LoginPage extends LitElement {
 			}
 			return
 		}
-		navigate('/dashboard')
+		
 	}
 
 	render() {

@@ -142,6 +142,7 @@ class RegisterPage extends LitElement {
 				password: this.password,
 			})
 			applyToken(response.data.token)
+			navigate('/dashboard')
 		} catch (error) {
 			if (!(error instanceof AxiosError)) return
 			this.error = 'Fehler bei Registrierung'
@@ -151,7 +152,7 @@ class RegisterPage extends LitElement {
 				return
 			}
 		}
-		navigate('/dashboard')
+		
 	}
 
 	render() {
