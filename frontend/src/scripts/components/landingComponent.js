@@ -135,8 +135,8 @@ class LandingComponent extends LitElement {
 						</p>
 
 						<div class="buttons">
-							<a href="/contact/index.html" class="button contact"
-								>Kontaktieren Sie uns</a
+							<a href="/dashboard/index.html" class="button contact"
+								>Dashboard</a
 							>
 							<a href="/login/index.html" class="button login"
 								>Anmelden</a
