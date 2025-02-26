@@ -9,6 +9,9 @@ export const getTodos = async (req, res) => {
     const todos = await req.context.prisma.todo.findMany({
         where: {
             ownerId: req.context.user.id
+        },
+        orderBy: {
+            startAt: "asc"
         }
     })
     return res.json(todos)
