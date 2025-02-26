@@ -1,5 +1,11 @@
 import express from 'express'
-import { getTodos, createTodo, updateTodo, deleteTodo, createTodoSmartSchedule } from '../controllers/todoController.js'
+import {
+	getTodos,
+	createTodo,
+	updateTodo,
+	deleteTodo,
+	createTodoSmartSchedule,
+} from '../controllers/todoController.js'
 import { authenticate } from '../middleware/auth.js'
 
 const router = express.Router()
@@ -12,6 +18,6 @@ router.post('/', createTodo)
 router.post('/new', createTodo)
 router.put('/:id', updateTodo)
 router.delete('/:id', deleteTodo)
-router.post("/smart", createTodoSmartSchedule)
+router.post('/smart', createTodoSmartSchedule)
 
 export default router

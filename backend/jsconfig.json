@@ -1,8 +1,12 @@
 {
-    "compilerOptions": {
-        "checkJs": true,
-        "baseUrl": ".",
-        "typeRoots": ["./node_modules/@types", "./node_modules/@prisma", "./types"]
-    },
-    "include": ["**/*.js", "**/*.d.ts"]
+	"compilerOptions": {
+		"checkJs": true,
+		"baseUrl": ".",
+		"typeRoots": [
+			"./node_modules/@types",
+			"./node_modules/@prisma",
+			"./types"
+		]
+	},
+	"include": ["**/*.js", "**/*.d.ts"]
 }

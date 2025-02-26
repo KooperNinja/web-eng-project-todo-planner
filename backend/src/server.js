@@ -9,16 +9,16 @@ const app = express()
 // Middleware
 app.use(addContextToRequest)
 app.use(express.json())
-app.use(cors());
+app.use(cors())
 
 // Routes
 app.get('/', (req, res) => {
-    res.send("You found us.")
+	res.send('You found us.')
 })
 app.use('/api/todos', todoRouter)
 app.use('/api/auth', authRouter)
 
 // Start the Backend App
 app.listen(3001, '0.0.0.0', () => {
-    console.log("Server running on: http://localhost:3001")
+	console.log('Server running on: http://localhost:3001')
 })
