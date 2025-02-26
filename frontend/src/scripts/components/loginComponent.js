@@ -154,7 +154,7 @@ class LoginPage extends LitElement {
 			}
 			return
 		}
-		navigate('/')
+		navigate('/dashboard')
 	}
 
 	render() {

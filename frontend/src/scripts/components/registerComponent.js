@@ -151,7 +151,7 @@ class RegisterPage extends LitElement {
 				return
 			}
 		}
-		navigate('/')
+		navigate('/dashboard')
 	}
 
 	render() {
