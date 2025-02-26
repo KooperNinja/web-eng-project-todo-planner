@@ -1,13 +1,13 @@
 {
   "type": "module",
   "scripts": {
-    "start:dev": "yarn run db:migrate && yarn run dev",
+    "start:dev": "yarn run db:deploy && yarn install && yarn run dev",
     "dev": "nodemon -L src/server.js",
     "attach": "docker compose exec -it backend bash",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
-    "db:deploy": "prisma migrate deploy && npx prisma generate"
+    "db:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

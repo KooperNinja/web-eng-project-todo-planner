@@ -12,7 +12,6 @@ router.post('/', createTodo)
 router.post('/new', createTodo)
 router.put('/:id', updateTodo)
 router.delete('/:id', deleteTodo)
-
 router.post("/smart", createTodoSmartSchedule)
 
 export default router
