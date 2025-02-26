@@ -132,15 +132,6 @@ class TimeSelector extends LitElement {
 					min="1"
 				/>
 			</div>
-
-			${this.time
-				? html`
-						<div class="time-display-container">
-							<span class="time-display-text">Uhrzeit:</span>
-							<time-display .time=${this.time}></time-display> Uhr
-						</div>
-					`
-				: ''}
 		`
 	}
 }

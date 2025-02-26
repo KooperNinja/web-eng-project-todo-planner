@@ -1,5 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import './todoPopup.js';
+import { backendAxios } from '../axios.js';
+import { navigate } from '../router.js';
+import { AxiosError } from 'axios';
 
 class TodoListView extends LitElement {
     static styles = css`
@@ -14,7 +17,7 @@ class TodoListView extends LitElement {
 
         h2 {
             text-align: center;
-            color: var(--primary-color);
+            color: var(--secondary-color);
             margin-bottom: 20px;
             font-family: 'Miniver', cursive;
             font-size: 45px;
@@ -100,12 +103,14 @@ class TodoListView extends LitElement {
 
     static properties = {
         todos: { type: Array },
+        dummyData: { type: Array },
         showPopup: { type: Boolean }
     };
 
     constructor() {
         super();
-        this.todos = [
+        this.todos = []
+        this.dummyData = [
             {
                 id: 1,
                 ownerId: 1,
@@ -138,18 +143,49 @@ class TodoListView extends LitElement {
             }
         ];
         this.showPopup = false;
+        this.fetchTodos()
+    }
+
+    async fetchTodos() {
+        try {
+            const response = await backendAxios.get('/todos');
+            this.todos = response.data;
+        } catch (error) {
+            if (!(error instanceof AxiosError)) return this.dummyData;
+            if (error.response.status === 401) navigate('/login');
+            console.error(error);
+        }
+        return this.dummyData;
+    }
+
+    async onNewTodo() {
+        await this.fetchTodos();
+        this.requestUpdate('todos');
     }
 
     togglePopup() {
         this.showPopup = !this.showPopup;
     }
 
-    completeTodo(id) {
-        this.todos = this.todos.filter(todo => todo.id !== id);
+    async completeTodo(id) {
+        /** Noch gleich wie Delete -> In Zukunft könnte hier geupdated werden */
+        try {
+            await backendAxios.delete(`/todos/${id}`);
+            this.todos = this.todos.filter(todo => todo.id !== id);
+            this.requestUpdate('todos');
+        } catch (error) {
+            console.error(error);
+        }
     }
 
-    deleteTodo(id) {
-        this.todos = this.todos.filter(todo => todo.id !== id);
+    async deleteTodo(id) {
+        try {
+            await backendAxios.delete(`/todos/${id}`);
+            this.todos = this.todos.filter(todo => todo.id !== id);
+            this.requestUpdate('todos');
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     render() {
@@ -158,7 +194,7 @@ class TodoListView extends LitElement {
             <div class="controls">
                 <button @click="${this.togglePopup}">+ Neues To-Do</button>
             </div>
-            ${this.showPopup ? html`<todo-popup @close="${this.togglePopup}"></todo-popup>` : ''}
+            ${this.showPopup ? html`<todo-popup @close="${this.togglePopup}" @newTodo="${this.onNewTodo}"></todo-popup>` : ''}
             <div class="todo-list">
                 ${this.todos.map(todo => html`
                     <div class="todo-item">

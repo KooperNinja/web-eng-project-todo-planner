@@ -7,6 +7,11 @@ import { backendAxios } from '../axios.js'
 
 export class TodoPopup extends LitElement {
 	static styles = css`
+		:host {
+            --primary-color: #0d4c8b;
+            --secondary-color: #fa7d00;
+		}
+
 		.popup {
 			position: fixed;
 			top: 50%;
@@ -40,7 +45,7 @@ export class TodoPopup extends LitElement {
 			border: none;
 			font-size: 1.5em;
 			cursor: pointer;
-			color: #999;
+			color: var(--primary-color);
 		}
 
 		.popup-body {
@@ -77,7 +82,7 @@ export class TodoPopup extends LitElement {
 		.popup-footer button {
 			padding: 10px 20px;
 			border: none;
-			background: #333;
+			background: var(--primary-color);
 			color: white;
 			cursor: pointer;
 			border-radius: 5px;
@@ -86,7 +91,7 @@ export class TodoPopup extends LitElement {
 		}
 
 		.message {
-			color: lightgreen;
+			color: var(--secondary-color);
 		}
 	`
 
@@ -107,7 +112,7 @@ export class TodoPopup extends LitElement {
 
 	/**
 	 *
-	 * @returns {Date | null}
+	 * @returns {number | null}
 	 */
 
 	getStartAtMsFromSelector() {
@@ -144,12 +149,15 @@ export class TodoPopup extends LitElement {
 			return
 		}
 		const startTimeMs = this.getMsFromTime(startTimeString)
+		console.log(new Date(startAtMs + startTimeMs))
 		try {
 			const newTodo = await backendAxios.post(`/todos${autoPlan ? '/smart' : '/new'}`, {
 				title: title,
 				description: description,
 				startAtMs: startAtMs + startTimeMs,
 				duration: duration,
+				timeFrameStartMs: new Date(startAtMs).setHours(17, 0, 0, 0),
+				timeFrameEndMs: new Date(startAtMs).setHours(23, 59, 0, 0),
 			})
 			console.log(newTodo)
 			this.message = `To-Do ${newTodo.data.title} wurde erfolgreich erstellt`
@@ -187,7 +195,6 @@ export class TodoPopup extends LitElement {
 					<date-selector id="date"></date-selector>
 					<date-display></date-display>
 					<time-selector id="time"></time-selector>
-					<time-display></time-display>
 				</div>
 				${this.message ? html`<p class="message">${this.message}</p>` : ''}
 				<div class="popup-footer">
