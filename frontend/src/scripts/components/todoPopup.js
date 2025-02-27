@@ -23,7 +23,7 @@ export class TodoPopup extends LitElement {
 			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 			padding: 20px;
 			border-radius: 10px;
-			width: 500px;
+			width: clamp(200px, 80%, 500px);
 			z-index: 1000;
 		}
 
