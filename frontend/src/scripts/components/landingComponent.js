@@ -138,7 +138,7 @@ class LandingComponent extends LitElement {
 							lösen!
 						</h2>
 						<p class="describtion">
-							Hier kannst du gan zeinfach deine Termine eintragen,
+							Hier kannst du ganz einfach deine Termine eintragen,
 							vermerken was du noch machen wolltest und vieles
 							mehr.
 						</p>
